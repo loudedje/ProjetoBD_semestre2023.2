@@ -1,0 +1,155 @@
+CREATE DATABASE restaurante_imigrante;
+
+
+-- Excluir tabelas se existirem
+DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS funcionario;
+DROP TABLE IF EXISTS produto;
+DROP TABLE IF EXISTS cardapio;
+DROP TABLE IF EXISTS pedido;
+DROP TABLE IF EXISTS avaliacao;
+
+-- Criação das tabelas
+
+-- Tabela dos Usuarios
+CREATE TABLE usuario (
+    cpf VARCHAR(11) PRIMARY KEY,
+    nome VARCHAR(255),
+    sobrenome VARCHAR(100),
+    email VARCHAR(255),
+    datadeNasc DATE,
+    telefone VARCHAR(300),
+    senha VARCHAR(250),
+    endereco VARCHAR(300)
+);
+
+-- Tabela dos Funcionarios
+CREATE TABLE funcionario (
+    cpf VARCHAR(11) PRIMARY KEY,
+    nome VARCHAR(255),
+    sobrenome VARCHAR(255),
+    email VARCHAR(200),
+    senha VARCHAR(200)
+);
+
+-- Tabela dos Produtos
+CREATE TABLE produto (
+    codigoProduto VARCHAR(20) PRIMARY KEY,
+    dataComprado DATE,
+    nomeProduto VARCHAR(255),
+    valorProduto DECIMAL(10,2),
+    qtdComprada INT
+);
+
+-- Tabela dos Cardapio
+CREATE TABLE cardapio (
+    id VARCHAR(20) PRIMARY KEY,
+    valor DECIMAL(10,2),
+    descricaoPrato VARCHAR(200),
+    validade BOOLEAN
+);
+
+-- Tabela dos Pedidos
+CREATE TABLE pedido (
+    id VARCHAR(20) PRIMARY KEY,
+    idCardapio VARCHAR(20) REFERENCES cardapio(id),
+    cpfPedido VARCHAR(11) REFERENCES usuario(cpf),
+    statusEntrega VARCHAR(255),
+    data DATE,
+    observacao VARCHAR(200)
+);
+
+-- Tabela das Avaliacoes
+CREATE TABLE avaliacao (
+    cpfAvaliador VARCHAR(11) REFERENCES usuario(cpf),
+    idCardapio VARCHAR(20) REFERENCES cardapio(id),
+    avaliacao VARCHAR(100),
+    n_estrelas DECIMAL(3,1),
+    data DATE,
+    PRIMARY KEY (cpfAvaliador, idCardapio)
+);
+
+-- Tabela Usuario
+INSERT INTO usuario (cpf, nome, sobrenome, email, datadeNasc, telefone, senha, endereco)
+VALUES
+('02020202020', 'Sime','Madsen','madesen@gmail.com', '1900-11-22', '88828282','senha22','avenide,356'),
+('34567890123', 'Sime', 'Djema', 'djema.sime@gmail.com', '2000-03-08', '765432109', 'senha789', 'Getulio, 110'),
+('45678901234', 'Fleur', 'Anide', 'anidesime@example.com', '1998-12-01', '654321098', 'senha101112', 'avenida Getullio, 101'),
+('56789012345', 'Pierre', 'Liza', 'lizarepierre@example.com', '1982-07-30', '543210987', 'senha1234', 'Rua Fundos, 1234'),
+('67890123456', 'Ricardo', 'Almeida', 'ricardo.almeida@example.com', '1993-11-18', '432109876', 'minhasenha555', 'Avenida Principal, 555'),
+('78901234567', 'Sime', 'victor', 'victor.sime@yahoo.com', '1975-06-25', '321098765', 'senha456', 'rua mato grosso, 456'),
+('89012345678', 'Pierre', 'Mani', 'pierre.mani@gmail.com', '1988-04-12', '210987654', 'minhasenhacod', ', 789'),
+('90123456789', 'Oreste', 'Djumay', 'djumayoreste23@gmail.com', '1996-09-05', '109876543', 'outrasenha789', 'castello branco, 1011'),
+('01234567890', 'Sime', 'Williamson', 'william@example1.com', '1980-02-20', '123456789', 'senha987', 'Travessa da Montanha, 1213');
+
+-- Tabela Funcionario
+INSERT INTO funcionario (cpf, nome, sobrenome, email, senha)
+VALUES
+('12345678901', 'Jean', 'Pierre', 'Pierre@gmail.com', 'senha123'),
+('23456789012', 'Mari', 'Henry', 'maHenry@gmail.com', 'senha456'),
+('34567890123', 'Robert', 'Eunice', 'roberEunice@gmail.com', 'senha789'),
+('45678901234', 'Luis', 'Geva', 'luisgeve@yahoo.com', 'senha101112'),
+('56789012345', 'Elis', 'Mari', 'Mari@gmail.com', 'senha1234'),
+('67890123456', 'Iris', 'Wadson', 'wadson@gmail.com', 'minhasenha555'),
+('78901234567', 'Richard', 'Harry', 'Harryrichard@example.com', 'senha456'),
+('89012345678', 'Henry', 'Liz', 'LizHanry@example.com', 'minhasenhacod'),
+('90123456789', 'Daniel', 'Pierre', 'daniel.pierre@example.com', 'ebaasenha'),
+('01234567890', 'Jules', 'Henry', 'juleshenry@example.com', 'senha987');
+
+-- Tabela Cardapio
+INSERT INTO cardapio (id, valor, descricaoPrato, validade)
+VALUES
+('1', 19.99, 'Fritay', true),
+('2', 50.11, 'Riz et Djon Djon', false),
+('3', 44.99, 'Kalalou et Riz', true),
+('4', 20.50, 'Plats traditionenls', false),
+('5', 22.99, 'Soup Joumou', false),
+('6', 27.99, 'Tasso de diri', true),
+('7', 149.90, 'Poulet aux noirs', true),
+('8', 50.00, 'Accra', false),
+('9', 60.50, 'Griot', true),
+('10', 70.99, 'Bouillon', true);
+
+-- Tabela Pedido
+INSERT INTO pedido (id, idCardapio, cpfPedido, statusEntrega, data, observacao)
+VALUES
+('2', '3', '23456789012', 'Concluído', '2023-01-15', 'Pas trop de Sauce'),
+('3', '2', '34567890123', 'Em andamento', '2023-01-20', 'Pas beaucoup de salad'),
+('4', '4', '45678901234', 'Pendente', '2023-01-25', 'aucune observation'),
+('5', '5', '56789012345', 'Concluído', '2023-02-01', 'Aucune observation'),
+('7', '3', '78901234567', 'Em andamento', '2023-02-10', 'Pas trop de riz'),
+('8', '2', '89012345678', 'Concluído', '2023-02-15', 'Sans le salade'),
+('9', '4', '90123456789', 'Pendente', '2023-02-20', 'Aucune');
+
+-- Tabela Produto
+INSERT INTO produto (codigoProduto, dataComprado, nomeProduto, valorProduto, qtdComprada)
+VALUES
+('P001', '2023-01-10', 'Riz', 50.99, 5),
+('PR01', '2023-01-10', 'Haricot', 80.99, 5),
+('P201', '2023-01-10', 'Viande', 50.99, 5),
+('P051', '2023-01-10', 'Farine', 50.99, 5),
+('P021', '2023-01-10', 'Riz', 50.99, 5),
+('P002', '2023-01-15', 'Oil', 35.75, 3),
+('P041', '2023-01-10', 'Riz', 50.99, 5),
+('P003', '2023-01-20', 'Viande', 22.50, 10),
+('P004', '2023-01-25', 'Haricot', 45.00, 2),
+('P005', '2023-02-01', 'Riz', 60.25, 4),
+('P006', '2023-02-05', 'Viande', 18.99, 7),
+('P007', '2023-02-10', 'Riz', 40.50, 6),
+('P008', '2023-02-15', 'Haricot', 27.75, 9),
+('P009', '2023-02-20', 'Riz', 33.20, 3),
+('P010', '2023-02-25', 'Haricot', 55.80, 5);
+
+-- Tabela Avaliacao
+INSERT INTO avaliacao (cpfAvaliador, idCardapio, avaliacao, n_estrelas, data)
+VALUES
+('23456789012', '3', 'Vraiment délicieux', 5.0, '2023-01-15'),
+('34567890123', '2', 'Une autre évaluation', 3.5, '2023-01-20'),
+('45678901234', '4', 'Goût particulier', 4.0, '2023-02-01'),
+('56789012345', '5', 'Délicieux !', 5.0, '2023-02-10'),
+('78901234567', '3', 'Bon, mais pourrait s''améliorer', 3.0, '2023-02-20'),
+('89012345678', '2', 'Plat excellent !', 4.7, '2023-02-25'),
+('90123456789', '4', 'Saveur inégalée', 5.0, '2023-03-05');
+
+
+
